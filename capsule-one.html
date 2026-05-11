@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capsule One — Find Calm in Chaos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: 'Press Start 2P', monospace;
+      color: #F7E96B;
+      display: flex;
+      flex-direction: column;
+      height: 100dvh; /* dvh handles mobile browser chrome correctly */
+    }
+
+    .bg, .overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .bg {
+      background-image: url('background.jpg');
+      background-size: cover;
+      background-position: center;
+      z-index: -2;
+    }
+
+    .overlay {
+      background: rgba(0, 0, 0, 0.45);
+      z-index: -1;
+    }
+
+    /* Dark halo shared by title and subtitle */
+    .halo {
+      text-shadow:
+        0 0 12px rgba(0,0,0,1),
+        0 0 24px rgba(0,0,0,1),
+        0 0 40px rgba(0,0,0,0.9),
+        0 2px 3px rgba(0,0,0,1),
+        0 -1px 3px rgba(0,0,0,1);
+    }
+
+    header {
+      flex-shrink: 0;
+      position: relative;
+      z-index: 100;
+      text-align: center;
+      padding: 22px 24px 16px;
+    }
+
+    h1 {
+      font-size: 0.75rem;
+      line-height: 2;
+      letter-spacing: 0.04em;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 0.45rem;
+      letter-spacing: 0.25em;
+      /* same font treatment — no opacity dimming */
+    }
+
+    /* The vision board — fills all space between header and footer */
+    #board {
+      flex: 1;
+      position: relative;
+      overflow: hidden; /* tiles clipped at header/footer boundary */
+      z-index: 2;
+    }
+
+    .tile {
+      position: absolute;
+      height: auto;
+      border-radius: 2px;
+      box-shadow: 3px 6px 22px rgba(0,0,0,0.75);
+      cursor: pointer;
+      transform: rotate(var(--rot, 0deg));
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      will-change: transform;
+    }
+
+    .tile:hover,
+    .tile:active {
+      transform: rotate(0deg) translateY(-8px) scale(1.05) !important;
+      box-shadow: 6px 18px 44px rgba(0,0,0,0.9);
+      z-index: 500 !important;
+    }
+
+    footer {
+      flex-shrink: 0;
+      position: relative;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      padding: 14px 24px 32px;
+    }
+
+    button {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.8rem;
+      color: #F7E96B;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 14px 24px;
+      min-height: 52px;
+      letter-spacing: 0.05em;
+      transition: color 0.2s ease, text-shadow 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+      /* dark halo on button too */
+      text-shadow:
+        0 0 12px rgba(0,0,0,1),
+        0 0 24px rgba(0,0,0,1),
+        0 0 40px rgba(0,0,0,0.9);
+    }
+
+    button:hover,
+    button:active {
+      color: #fff;
+      text-shadow:
+        0 0 8px #F7E96B,
+        0 0 20px #F7E96B,
+        0 0 40px rgba(247,233,107,0.5),
+        0 0 20px rgba(0,0,0,0.9);
+    }
+
+    @media (min-width: 600px) {
+      h1        { font-size: 1.3rem; margin-bottom: 14px; }
+      .subtitle { font-size: 0.65rem; }
+      header    { padding: 32px 24px 22px; }
+      footer    { padding: 18px 24px 44px; }
+      button    { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg"></div>
+  <div class="overlay"></div>
+
+  <header>
+    <h1 class="halo">Find Calm in Chaos</h1>
+    <p class="subtitle halo">Capsule One</p>
+  </header>
+
+  <div id="board"></div>
+
+  <footer>
+    <button>Enter the Frequency</button>
+  </footer>
+
+  <script>
+    /* ── Add or remove filenames here to update the board ── */
+    const IMAGES = [
+      '4-agreements.jpeg',
+      '95%-knowing-what-you want.jpeg',
+      'calm-currents.jpeg',
+      'cosmic-drip.jpeg',
+      'explode.jpeg',
+      'i-am-afraid-vs-there-is-fear.jpeg',
+      'mind-is-a-closet.jpeg',
+      'release.jpeg',
+      'sit-in-it.jpeg',
+      'tripulate.jpeg',
+      'trust.jpeg',
+      'vibration-drip.jpeg',
+    ];
+    /* ─────────────────────────────────────────────────────── */
+
+    (function scatter() {
+      const board  = document.getElementById('board');
+      const boardW = board.clientWidth;
+      const boardH = board.clientHeight;
+      const mobile = boardW < 600;
+
+      // Tiles are large — meant to fill the board with dense overlap
+      const tileW = mobile
+        ? Math.round(boardW * 0.54)   // ~2 tiles across, heavy overlap
+        : Math.round(boardW * 0.26);  // ~4 tiles across, heavy overlap
+
+      const cols  = mobile ? 2 : 4;
+      const rows  = Math.ceil(IMAGES.length / cols); // 6 mobile / 3 desktop
+
+      // Zone anchors distribute tiles evenly, jitter makes it feel organic
+      const zoneW = boardW / cols;
+      const zoneH = boardH / rows;
+
+      const shuffled = [...IMAGES].sort(() => Math.random() - 0.5);
+
+      shuffled.forEach((src, i) => {
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+
+        // Center of this tile's zone
+        const cx = (col + 0.5) * zoneW;
+        const cy = (row + 0.5) * zoneH;
+
+        // Jitter: ±45% of zone — enough for real scatter and edge overlap
+        const jx = (Math.random() - 0.5) * zoneW * 0.9;
+        const jy = (Math.random() - 0.5) * zoneH * 0.9;
+
+        // Top-left of tile, roughly centered on zone center
+        const x = cx - tileW / 2 + jx;
+        const y = cy - tileW * 0.65 + jy; // offset ~0.65× width to visually center (portrait images)
+
+        const rot  = (Math.random() - 0.5) * 16;          // -8deg to +8deg
+        const zIdx = Math.floor(Math.random() * 20) + 1;  // random depth layering
+
+        const img = document.createElement('img');
+        img.src       = src;
+        img.className = 'tile';
+        img.alt       = src.replace(/[-_.]/g, ' ').replace('jpeg', '').trim();
+        img.style.cssText = `left:${x}px; top:${y}px; width:${tileW}px; z-index:${zIdx};`;
+        img.style.setProperty('--rot', rot + 'deg');
+
+        board.appendChild(img);
+      });
+    })();
+  </script>
+
+</body>
+</html>
