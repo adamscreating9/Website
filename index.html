@@ -3,100 +3,261 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <title>Rest in Motion — Adam Hebert</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    /* Fixed background — pseudo-element avoids iOS Safari fixed-attachment bug */
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); }
+      50%       { transform: scale(1.05); }
     }
 
-    html, body {
-      width: 100%;
-      height: 100%;
-    }
-
-    body {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-
-    /* Background image layer */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
-      background-image: url('background.jpg');
+      background-image: url('rest-in-motion-zoom.jpeg?v=3');
       background-size: cover;
       background-position: center;
-      background-repeat: no-repeat;
-      z-index: 0;
+      z-index: -1;
+      animation: breathe 12s ease-in-out infinite;
+      will-change: transform;
     }
 
-    /* Semi-transparent dark overlay */
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.45);
-      z-index: 1;
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: #f0f0f0;
+      -webkit-font-smoothing: antialiased;
     }
 
-    nav {
-      position: relative;
-      z-index: 2;
+    /* ─── Section 1: Painting ───────────────────────────────── */
+
+    #painting {
+      min-height: 100vh;
+      min-height: 100svh;
       display: flex;
       flex-direction: column;
+    }
+
+    .hero-wrap {
+      flex: 1;
+      min-height: 0;
+      display: flex;
       align-items: center;
-      gap: 56px;
-      padding: 24px;
+      justify-content: center;
     }
 
-    button {
+    .hero-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .painting-info {
+      flex-shrink: 0;
+      text-align: center;
+      padding: 18px 24px 24px;
+    }
+
+    .painting-title {
       font-family: 'Press Start 2P', monospace;
-      font-size: 1.5rem;
-      color: #F7E96B;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      padding: 16px 24px;
-      letter-spacing: 0.05em;
-      /* Tap target: at least 48px tall */
-      min-height: 56px;
-      transition: color 0.2s ease, text-shadow 0.2s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    button:hover,
-    button:active {
-      color: #fff;
+      font-size: 1rem;
+      color: #C084FC;
+      line-height: 1.7;
+      margin-bottom: 10px;
       text-shadow:
-        0 0 8px #F7E96B,
-        0 0 20px #F7E96B,
-        0 0 40px rgba(247, 233, 107, 0.5);
+        0 0 3px rgba(0,0,0,1),
+        0 0 10px rgba(0,0,0,0.9),
+        0 0 24px rgba(0,0,0,0.7);
     }
 
-    @media (max-width: 480px) {
-      button {
-        font-size: 1.1rem;
-        padding: 16px 20px;
-      }
+    .byline {
+      font-size: 0.85rem;
+      color: #fff;
+      letter-spacing: 0.02em;
+      margin-bottom: 24px;
+      text-shadow:
+        0 0 3px rgba(0,0,0,1),
+        0 0 8px rgba(0,0,0,0.9);
+    }
 
-      nav {
-        gap: 48px;
-      }
+    .inquire-btn {
+      display: inline-block;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.7rem;
+      color: #C084FC;
+      background: rgba(0, 0, 0, 0.85);
+      border: 1.5px solid #C084FC;
+      border-radius: 10px;
+      padding: 14px 32px;
+      min-height: 44px;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+      text-shadow:
+        0 0 3px rgba(0,0,0,1),
+        0 0 8px rgba(0,0,0,0.9);
+    }
+
+    .inquire-btn:hover,
+    .inquire-btn:active {
+      background: rgba(192, 132, 252, 0.12);
+      box-shadow: 0 0 14px rgba(192, 132, 252, 0.35), 0 0 4px rgba(192, 132, 252, 0.6);
+    }
+
+    /* ─── Section 2: The Frequency ──────────────────────────── */
+
+    #story {
+      padding: 28px 24px 72px;
+      position: relative;
+    }
+
+    /* Soft vignette — no hard edges, fades invisibly into the painting */
+    #story::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse 90% 75% at 50% 35%,
+        rgba(0, 0, 0, 0.55) 0%,
+        rgba(0, 0, 0, 0.28) 35%,
+        rgba(0, 0, 0, 0.08) 62%,
+        transparent 82%
+      );
+      pointer-events: none;
+    }
+
+    .story-inner {
+      position: relative; /* stack above the vignette */
+      z-index: 1;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .story-heading {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.9rem;
+      color: #C084FC;
+      line-height: 1.7;
+      margin-bottom: 36px;
+      text-shadow:
+        0 0 3px rgba(0,0,0,1),
+        0 0 8px rgba(0,0,0,0.9),
+        0 0 20px rgba(0,0,0,0.7);
+    }
+
+    .story-inner p {
+      font-size: 18px;
+      line-height: 1.75;
+      color: #f0f0f0;
+      margin-bottom: 28px;
+      text-shadow: 0 0 12px rgba(0,0,0,0.95), 0 1px 2px rgba(0,0,0,1);
+    }
+
+    /* ─── Mind map ──────────────────────────────────────────── */
+
+    .mindmap {
+      margin: 40px 0 40px;
+      text-align: center;
+    }
+
+    .mindmap-img {
+      display: block;
+      width: 90%;
+      max-width: 550px;
+      margin: 0 auto;
+      object-fit: contain;
+      border-radius: 2px;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        0 8px 40px rgba(0, 0, 0, 0.65);
+    }
+
+    .mindmap figcaption {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.38rem;
+      color: rgba(255, 255, 255, 0.35);
+      margin-top: 14px;
+      letter-spacing: 0.12em;
+      line-height: 1.9;
+    }
+
+    /* ─── Footer ────────────────────────────────────────────── */
+
+    footer {
+      text-align: center;
+      padding: 0 24px 44px;
+    }
+
+    .footer-text {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.28);
+      letter-spacing: 0.1em;
+    }
+
+    /* ─── Desktop ───────────────────────────────────────────── */
+
+    @media (min-width: 600px) {
+      .painting-title { font-size: 1.4rem; }
+      .story-heading  { font-size: 1.15rem; }
+      .story-inner p  { font-size: 20px; }
     }
   </style>
 </head>
 <body>
-  <nav>
-    <button>About</button>
-    <button>Mind Maps</button>
-    <button>Paintings</button>
-  </nav>
+
+  <!-- ── Section 1: Painting ──────────────────────────────────── -->
+  <section id="painting">
+
+    <div class="hero-wrap">
+      <img class="hero-img"
+           src="rest-in-motion.jpeg"
+           alt="Rest in Motion — original painting by Adam Hebert">
+    </div>
+
+    <div class="painting-info">
+      <h1 class="painting-title">Rest in Motion</h1>
+      <p class="byline">by Adam Hebert · September 2025</p>
+      <a class="inquire-btn" href="https://ig.me/m/adamscreating" target="_blank" rel="noopener">Inquire</a>
+    </div>
+
+  </section>
+
+  <!-- ── Section 2: The Frequency ─────────────────────────────── -->
+  <section id="story">
+    <div class="story-inner">
+
+      <h2 class="story-heading">The Frequency</h2>
+
+      <p>Rest in Motion is a piece that explores what it truly means to rest in the digital age. Why do we sleep 12 hours and find that we are still tired? It's simple - our soul is drained. While our body is rested, our soul is empty. We work soul-sucking jobs and 'rest' by watching TikTok and Netflix, which drains us further. We're always tired.</p>
+
+      <p>These corporations are selling us relaxation in the form of passive consumption - when the real answer is to feed our souls. To rest in motion. To do more, not less. To find the activities that give us energy: creating art, making a meal, doing yoga, touching grass, whatever it might be for each of us.</p>
+
+      <figure class="mindmap">
+        <img class="mindmap-img"
+             src="rest-in-motion-map.jpeg"
+             alt="Mind map behind Rest in Motion">
+        <figcaption>the mind map behind the piece</figcaption>
+      </figure>
+
+      <p>Rest in Motion was created in September 2025 at Same Same But Different Music Festival, where I received this consciousness download of resting in motion. During the process I was dancing and painting and accidentally punched a hole through the canvas - representing the pure energy and passion that went into this piece.</p>
+
+    </div>
+  </section>
+
+  <!-- ── Footer ───────────────────────────────────────────────── -->
+  <footer>
+    <p class="footer-text">Adam Hebert · adamscreating</p>
+  </footer>
+
 </body>
 </html>
