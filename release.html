@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Release — Adam Hebert</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url('gallery-bg.jpg');
+      background-size: cover;
+      background-position: center;
+      z-index: -2;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      z-index: -1;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: #f0f0f0;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 56px;
+    }
+
+    .back-link {
+      align-self: flex-start;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.55);
+      text-decoration: none;
+      margin-bottom: 20px;
+      transition: color 0.2s ease;
+    }
+
+    .back-link:hover { color: #fff; }
+
+    .piece-frame {
+      width: min(90vw, 800px);
+      aspect-ratio: 4 / 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .piece-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+      box-shadow:
+        0 10px 50px rgba(0, 0, 0, 0.75),
+        0 2px 10px rgba(0, 0, 0, 0.6);
+    }
+
+    .details {
+      text-align: center;
+      margin-top: 24px;
+    }
+
+    h1 {
+      font-size: 1.1rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+    }
+
+    .meta {
+      margin-top: 6px;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .price {
+      margin-top: 10px;
+      font-size: 1rem;
+      letter-spacing: 0.04em;
+    }
+
+    .buy-button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 14px 32px;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #f0f0f0;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 999px;
+      transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .buy-button:hover {
+      color: #000;
+      background: #f0f0f0;
+      border-color: #f0f0f0;
+    }
+
+    @media (min-width: 600px) {
+      .piece-frame { width: min(70vw, 800px); }
+      h1 { font-size: 1.3rem; }
+      .meta { font-size: 0.9rem; }
+      .price { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <a class="back-link" href="index.html">← Shop</a>
+
+  <div class="piece-frame">
+    <img class="piece-img" src="calm-currents.jpeg" alt="Release, painting by Adam Hebert">
+  </div>
+
+  <div class="details">
+    <h1>Release</h1>
+    <p class="meta">30 x 40</p>
+    <p class="price">$500</p>
+    <a class="buy-button" href="#">Buy</a>
+  </div>
+
+</body>
+</html>
