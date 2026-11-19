@@ -54,12 +54,32 @@
     .back-link:hover { color: #fff; }
 
     .piece-frame {
+      position: relative;
       width: 100%;
       aspect-ratio: 4 / 3;
       display: flex;
       align-items: center;
       justify-content: center;
     }
+
+    .sold-badge {
+      display: none;
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      padding: 7px 16px;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: rgba(0, 0, 0, 0.75);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 999px;
+      z-index: 1;
+    }
+
+    .is-sold .sold-badge { display: inline-block; }
+    .is-sold .piece-img { filter: grayscale(65%) brightness(0.7); }
 
     .piece-img {
       width: 100%;
@@ -122,6 +142,13 @@
       transform: translateY(-1px);
     }
 
+    .buy-button.is-sold-button {
+      pointer-events: none;
+      background: transparent;
+      color: #f0f0f0;
+      border-color: rgba(255, 255, 255, 0.45);
+    }
+
     @media (min-width: 600px) {
       .piece-frame { width: min(70vw, 800px); }
       .piece-img {
@@ -149,6 +176,7 @@
 
   <div class="piece-frame">
     <img class="piece-img" src="gallery-6.jpg" alt="Resonance, painting by Adam Hebert">
+    <span class="sold-badge">Sold</span>
   </div>
 
   <div class="details">
@@ -156,8 +184,24 @@
     <p class="meta">30 x 40</p>
     <p class="medium">Acrylic on canvas</p>
     <p class="price">$500</p>
-    <a class="buy-button" href="https://buy.stripe.com/4gM14p8Ut6SH0WI2lYes000">Buy</a>
+    <a class="buy-button" id="buy-button" href="https://buy.stripe.com/4gM14p8Ut6SH0WI2lYes000">Buy</a>
   </div>
+
+  <script>
+    (function () {
+      fetch('/.netlify/functions/sold-status')
+        .then(function (res) { return res.ok ? res.json() : null; })
+        .then(function (status) {
+          if (!status || status.resonance !== false) return;
+          document.body.classList.add('is-sold');
+          var btn = document.getElementById('buy-button');
+          btn.textContent = 'Sold';
+          btn.removeAttribute('href');
+          btn.classList.add('is-sold-button');
+        })
+        .catch(function () { /* fail open: leave Buy button as-is */ });
+    })();
+  </script>
 
 </body>
 </html>

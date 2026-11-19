@@ -59,6 +59,7 @@
     }
 
     .item-frame {
+      position: relative;
       width: 100%;
       aspect-ratio: 4 / 3;
       overflow: hidden;
@@ -67,6 +68,25 @@
         0 2px 10px rgba(0, 0, 0, 0.6);
       transition: transform 0.2s ease;
     }
+
+    .sold-badge {
+      display: none;
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 6px 14px;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: rgba(0, 0, 0, 0.75);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 999px;
+    }
+
+    .item.is-sold .sold-badge { display: inline-block; }
+    .item.is-sold .item-img { filter: grayscale(65%) brightness(0.7); }
+    .item.is-sold .price-tag { color: rgba(255, 255, 255, 0.85); }
 
     .item:hover .item-frame,
     .item:active .item-frame {
@@ -114,22 +134,43 @@
   <h1>Shop</h1>
 
   <div class="grid">
-    <a class="item" href="resonance.html">
+    <a class="item" href="resonance.html" data-painting="resonance">
       <div class="item-frame">
         <img class="item-img" src="gallery-6.jpg" alt="Resonance, painting by Adam Hebert">
+        <span class="sold-badge">Sold</span>
       </div>
       <p class="item-title">Resonance</p>
-      <p class="item-meta">30 x 40 · $500</p>
+      <p class="item-meta">30 x 40 · <span class="price-tag">$500</span></p>
     </a>
 
-    <a class="item" href="release.html">
+    <a class="item" href="release.html" data-painting="release">
       <div class="item-frame">
         <img class="item-img" src="gallery-1.jpg" alt="Release, painting by Adam Hebert">
+        <span class="sold-badge">Sold</span>
       </div>
       <p class="item-title">Release</p>
-      <p class="item-meta">30 x 40 · $500</p>
+      <p class="item-meta">30 x 40 · <span class="price-tag">$500</span></p>
     </a>
   </div>
+
+  <script>
+    (function () {
+      fetch('/.netlify/functions/sold-status')
+        .then(function (res) { return res.ok ? res.json() : null; })
+        .then(function (status) {
+          if (!status) return;
+          document.querySelectorAll('[data-painting]').forEach(function (el) {
+            var key = el.getAttribute('data-painting');
+            if (status[key] === false) {
+              el.classList.add('is-sold');
+              var tag = el.querySelector('.price-tag');
+              if (tag) tag.textContent = 'Sold';
+            }
+          });
+        })
+        .catch(function () { /* fail open: leave Buy links as-is */ });
+    })();
+  </script>
 
 </body>
 </html>
